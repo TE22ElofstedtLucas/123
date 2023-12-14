@@ -1,8 +1,6 @@
 ﻿﻿using Raylib_cs;
 using System.Numerics;
 
-
-
 Raylib.InitWindow(800, 600, "Hello");
 Raylib.SetTargetFPS(60);
 
@@ -13,7 +11,7 @@ Color hotPink = new Color(255, 105, 180, 255);
 
 
 Texture2D characterImage = Raylib.LoadTexture("1234.png");
-Rectangle characterRect = new Rectangle(10, 10, 32, 32);
+Rectangle characterRect = new Rectangle(100, 200, 32, 32);
 characterRect.Width = characterImage.Width;
 characterRect.Height = characterImage.Height;
 
@@ -68,43 +66,43 @@ while (!Raylib.WindowShouldClose())
 
     if (movement.Length() > 0)
     {
-      movement = Vector2.Normalize(movement);
+      movement = Vector2.Normalize(movement)*speed;
     }
 
-    movement *= speed;
-
     characterRect.X += movement.X;
-    characterRect.Y += movement.Y;
 
-    if (characterRect.X < 0 || characterRect.X > 800 - 64)
+    bool isInAWall = CheckIfWall(characterRect, walls);
+
+    if (isInAWall == true)
     {
       characterRect.X -= movement.X;
     }
-    if (characterRect.Y < 0 || characterRect.Y > 600 - 64)
+
+    characterRect.Y += movement.Y;
+    
+    isInAWall = CheckIfWall(characterRect, walls);
+    if (isInAWall == true)
     {
       characterRect.Y -= movement.Y;
     }
 
+     if (characterRect.X < 0 || characterRect.X > 800 - 104)
+     {
+       characterRect.X -= movement.X;
+    }
+     if (characterRect.Y < 0 || characterRect.Y > 600 - 84)
+     {
+       characterRect.Y -= movement.Y;
+    }
+
     if (Raylib.CheckCollisionRecs(characterRect, doorRect))
+    {
+      points++;
+    }
 
-      foreach (Rectangle wall in walls)
-      {
-        points++;
-      }
 
-    // x++;
-    // floorY += floorSpeedY;
-    // if (floorY < 0)
-    // {
-    //   floorSpeedY = 1;
-    // }
-    // else if (floorY > 550)
-    // {
-    //   floorSpeedY = -1;
-    // }
-
-    // position += movement;
   }
+
 
   // --------------------------------------------------------------------------
   // RENDERING
@@ -136,4 +134,16 @@ while (!Raylib.WindowShouldClose())
   }
 
   Raylib.EndDrawing();
+}
+
+static bool CheckIfWall(Rectangle characterRect, List<Rectangle> walls)
+{
+  foreach (Rectangle wall in walls)
+  {
+    if (Raylib.CheckCollisionRecs(characterRect, wall))
+    {
+      return true;
+    }
+  }
+  return false;
 }
