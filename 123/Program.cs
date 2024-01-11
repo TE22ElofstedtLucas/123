@@ -68,47 +68,56 @@ while (!Raylib.WindowShouldClose())
 
     if (movement.Length() > 0)
     {
-      movement = Vector2.Normalize(movement)*speed;
+      movement = Vector2.Normalize(movement) * speed;
     }
 
     characterRect.X += movement.X;
 
-    bool isInAWall = CheckIfWall(characterRect, walls, scene);
+    // bool isInAWall = CheckIfWall(characterRect, walls, scene);
 
-    if (isInAWall == true)
+    // if (isInAWall == true)
+    // {
+    //   characterRect.X -= movement.X;
+    // }
+
+    characterRect.Y += movement.Y;
+
+    // isInAWall = CheckIfWall(characterRect, walls, scene);
+
+    // if (isInAWall == true)
+    // {
+    //   characterRect.Y -= movement.Y;
+    // }
+
+    if (characterRect.X < 0 || characterRect.X > 800 - 104)
     {
       characterRect.X -= movement.X;
     }
-
-    characterRect.Y += movement.Y;
-    
-    isInAWall = CheckIfWall(characterRect, walls, scene);
-    if (isInAWall == true)
+    if (characterRect.Y < 0 || characterRect.Y > 600 - 84)
     {
       characterRect.Y -= movement.Y;
     }
 
-     if (characterRect.X < 0 || characterRect.X > 800 - 104)
-     {
-       characterRect.X -= movement.X;
-    }
-     if (characterRect.Y < 0 || characterRect.Y > 600 - 84)
-     {
-       characterRect.Y -= movement.Y;
+    // bool isInAWall = CheckIfWall(characterRect, walls, scene);
+    // if (isInAWall)
+    // {
+
+    // }    
+
+    foreach (Rectangle wall in walls)
+    {
+      if (Raylib.CheckCollisionRecs(characterRect, wall))
+      {
+        scene = "start";
+      }
     }
 
-    //foreach (Rectangle wall in walls)
-    if (Raylib.CheckCollisionRecs(characterRect,walls[0]))
-    {
-      scene = "start";
-    }
-    
-    
+
     if (Raylib.CheckCollisionRecs(characterRect, doorRect))
     {
       points++;
     }
-    
+
 
 
   }
@@ -128,7 +137,7 @@ while (!Raylib.WindowShouldClose())
   {
     Raylib.ClearBackground(Color.GOLD);
 
-    
+
 
 
     Raylib.DrawTexture(characterImage, (int)characterRect.X, (int)characterRect.Y, Color.WHITE);
@@ -139,7 +148,7 @@ while (!Raylib.WindowShouldClose())
     Raylib.DrawRectangleRec(walls[1], Color.BLACK);
     Raylib.DrawRectangleRec(walls[2], Color.BLACK);
     Raylib.DrawRectangleRec(walls[3], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[4], Color.WHITE);
+    Raylib.DrawRectangleRec(walls[4], Color.BLACK);
     Raylib.DrawRectangleRec(walls[5], Color.BLACK);
 
     Raylib.DrawText($"Points: {points}", 10, 10, 32, Color.WHITE);
@@ -155,11 +164,10 @@ static bool CheckIfWall(Rectangle characterRect, List<Rectangle> walls, string s
   {
     if (Raylib.CheckCollisionRecs(characterRect, wall))
     {
-      scene = "start";
-      characterRect.X = 10;
-      characterRect.Y = 430;
-    }
-    { 
+      // scene = "start";
+      // characterRect.X = 10;
+      // characterRect.Y = 430;
+
       return true;
     }
 
