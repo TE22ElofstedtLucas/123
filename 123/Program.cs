@@ -19,7 +19,7 @@ walls.Add(new Rectangle(40, 40, 740, 30));
 walls.Add(new Rectangle(40, 540, 740, 30));
 walls.Add(new Rectangle(700, 540, 40, 30));
 walls.Add(new Rectangle(700, 40, 40, 30));
-walls.Add(new Rectangle(40, 40, 30, 390));
+walls.Add(new Rectangle(40, 40, 30, 360));
 walls.Add(new Rectangle(750, 40, 30, 520));
 
 
@@ -73,7 +73,7 @@ while (!Raylib.WindowShouldClose())
 
     characterRect.X += movement.X;
 
-    bool isInAWall = CheckIfWall(characterRect, walls);
+    bool isInAWall = CheckIfWall(characterRect, walls, scene);
 
     if (isInAWall == true)
     {
@@ -82,7 +82,7 @@ while (!Raylib.WindowShouldClose())
 
     characterRect.Y += movement.Y;
     
-    isInAWall = CheckIfWall(characterRect, walls);
+    isInAWall = CheckIfWall(characterRect, walls, scene);
     if (isInAWall == true)
     {
       characterRect.Y -= movement.Y;
@@ -96,11 +96,14 @@ while (!Raylib.WindowShouldClose())
      {
        characterRect.Y -= movement.Y;
     }
-    if (Raylib.CheckCollisionRecs(characterRect, walls))
+
+    //foreach (Rectangle wall in walls)
+    if (Raylib.CheckCollisionRecs(characterRect,walls[0]))
     {
       scene = "start";
     }
-
+    
+    
     if (Raylib.CheckCollisionRecs(characterRect, doorRect))
     {
       points++;
@@ -136,7 +139,7 @@ while (!Raylib.WindowShouldClose())
     Raylib.DrawRectangleRec(walls[1], Color.BLACK);
     Raylib.DrawRectangleRec(walls[2], Color.BLACK);
     Raylib.DrawRectangleRec(walls[3], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[4], Color.BLACK);
+    Raylib.DrawRectangleRec(walls[4], Color.WHITE);
     Raylib.DrawRectangleRec(walls[5], Color.BLACK);
 
     Raylib.DrawText($"Points: {points}", 10, 10, 32, Color.WHITE);
@@ -146,7 +149,7 @@ while (!Raylib.WindowShouldClose())
   Raylib.EndDrawing();
 }
 
-static bool CheckIfWall(Rectangle characterRect, List<Rectangle> walls)
+static bool CheckIfWall(Rectangle characterRect, List<Rectangle> walls, string scene)
 {
   foreach (Rectangle wall in walls)
   {
@@ -156,7 +159,7 @@ static bool CheckIfWall(Rectangle characterRect, List<Rectangle> walls)
       characterRect.X = 10;
       characterRect.Y = 430;
     }
-    {
+    { 
       return true;
     }
 
