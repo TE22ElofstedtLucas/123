@@ -20,4 +20,4 @@ c:\Users\Lucas.bronegardlofs\Documents\programmering\123\123\obj\Debug\net7.0\re
 c:\Users\Lucas.bronegardlofs\Documents\programmering\123\123\obj\Debug\net7.0\123.pdb
 c:\Users\Lucas.bronegardlofs\Documents\programmering\123\123\obj\Debug\net7.0\123.genruntimeconfig.cache
 c:\Users\Lucas.bronegardlofs\Documents\programmering\123\123\obj\Debug\net7.0\ref\123.dll
-c:\Users\Lucas.bronegardlofs\Documents\programmering\123\123\bin\Debug\net7.0\1234.png
+c:\Users\Lucas.bronegardlofs\Documents\programmering\123\123\bin\Debug\net7.0\cube.png

@@ -1,4 +1,4 @@
-﻿﻿using Raylib_cs;
+﻿using Raylib_cs;
 using System.Numerics;
 
 Raylib.InitWindow(800, 600, "Hello");
@@ -9,10 +9,13 @@ Vector2 movement = new Vector2(0.1f, 0.1f);
 Color hotPink = new Color(255, 105, 180, 255);
 
 
-Texture2D characterImage = Raylib.LoadTexture("1234.png");
+Texture2D characterImage = Raylib.LoadTexture("cube.png");
+
 Rectangle characterRect = new Rectangle(10, 430, 32, 32);
 characterRect.Width = characterImage.Width;
 characterRect.Height = characterImage.Height;
+
+
 
 List<Rectangle> walls = new();
 walls.Add(new Rectangle(40, 40, 740, 30));
@@ -38,159 +41,157 @@ float speed = 5;
 
 string scene = "start";
 
-int points = 0;
-
 while (!Raylib.WindowShouldClose())
 {
-  // --------------------------------------------------------------------------
-  // GAME LOGIC
-  // --------------------------------------------------------------------------
+    // --------------------------------------------------------------------------
+    // Keys
+    // --------------------------------------------------------------------------
 
-  if (scene == "start")
-  {
-    if (Raylib.IsKeyDown(KeyboardKey.KEY_SPACE))
+    if (scene == "start")
     {
-      scene = "game";
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_SPACE))
+        {
+            scene = "game";
+        }
     }
-  }
-  else if (scene == "game")
-  {
-    movement = Vector2.Zero;
-
-    // kod här: läsa in knapptryck, ändra på movement
-    if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT))
+    else if (scene == "game")
     {
-      movement.X = -1;
+        movement = Vector2.Zero;
+
+        // kod här: läsa in knapptryck, ändra på movement
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_LEFT))
+        {
+            movement.X = -1;
+        }
+        else if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT))
+        {
+            movement.X = 1;
+        }
+        if (Raylib.IsKeyDown(KeyboardKey.KEY_UP))
+        {
+            movement.Y = -1;
+        }
+        else if (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN))
+        {
+            movement.Y = 1;
+        }
+
+        if (movement.Length() > 0)
+        {
+            movement = Vector2.Normalize(movement) * speed;
+        }
+
+        characterRect.X += movement.X;
+
+        // bool isInAWall = CheckIfWall(characterRect, walls, scene);
+
+        // if (isInAWall == true)
+        // {
+        //   characterRect.X -= movement.X;
+        // }
+
+        characterRect.Y += movement.Y;
+
+        // isInAWall = CheckIfWall(characterRect, walls, scene);
+
+        // if (isInAWall == true)
+        // {
+        //   characterRect.Y -= movement.Y;
+        // }
+
+        if (characterRect.X < 0 || characterRect.X > 800 - 65)
+        {
+            characterRect.X -= movement.X;
+        }
+        if (characterRect.Y < 0 || characterRect.Y > 600 - 52)
+        {
+            characterRect.Y -= movement.Y;
+        }
+
+        // bool isInAWall = CheckIfWall(characterRect, walls, scene);
+        // if (isInAWall)
+        // {
+
+        // }    
+
+        foreach (Rectangle wall in walls)
+        {
+            if (Raylib.CheckCollisionRecs(characterRect, wall))
+            {
+                scene = "start";
+                characterRect.X = 10;
+                characterRect.Y = 430;
+            }
+        }
+
+        if (Raylib.CheckCollisionRecs(characterRect, doorRect))
+        {
+            scene = "win";
+            characterRect.X = 10;
+            characterRect.Y = 430;
+        }
+
+
+
     }
-    else if (Raylib.IsKeyDown(KeyboardKey.KEY_RIGHT))
+
+
+    // --------------------------------------------------------------------------
+    // Väggar och scener
+    // --------------------------------------------------------------------------
+
+    Raylib.BeginDrawing();
+    if (scene == "start")
     {
-      movement.X = 1;
+        Raylib.ClearBackground(Color.SKYBLUE);
+        Raylib.DrawText("Press SPACE to start", 10, 10, 32, Color.BLACK);
     }
-    if (Raylib.IsKeyDown(KeyboardKey.KEY_UP))
+    else if (scene == "game")
     {
-      movement.Y = -1;
+        Raylib.ClearBackground(Color.PURPLE);
+
+        Raylib.DrawTexture(characterImage, (int)characterRect.X, (int)characterRect.Y, Color.WHITE);
+
+        Raylib.DrawRectangleRec(doorRect, Color.BROWN);
+
+        Raylib.DrawRectangleRec(walls[0], Color.BLACK);
+        Raylib.DrawRectangleRec(walls[1], Color.BLACK);
+        Raylib.DrawRectangleRec(walls[2], Color.BLACK);
+        Raylib.DrawRectangleRec(walls[3], Color.BLACK);
+        Raylib.DrawRectangleRec(walls[4], Color.BLACK);
+        Raylib.DrawRectangleRec(walls[5], Color.BLACK);
+        Raylib.DrawRectangleRec(walls[6], Color.BLACK);
+        Raylib.DrawRectangleRec(walls[7], Color.BLACK);
+        Raylib.DrawRectangleRec(walls[8], Color.BLACK);
+        Raylib.DrawRectangleRec(walls[9], Color.BLACK);
+        Raylib.DrawRectangleRec(walls[10], Color.BLACK);
+        Raylib.DrawRectangleRec(walls[11], Color.BLACK);
+        Raylib.DrawRectangleRec(walls[12], Color.BLACK);
+
     }
-    else if (Raylib.IsKeyDown(KeyboardKey.KEY_DOWN))
+    if (scene == "win")
     {
-      movement.Y = 1;
+      Raylib.ClearBackground(Color.YELLOW);
+      Raylib.DrawText("YOU WIN!", 100, 100, 32, Color.BLACK);
     }
 
-    if (movement.Length() > 0)
-    {
-      movement = Vector2.Normalize(movement) * speed;
-    }
-
-    characterRect.X += movement.X;
-
-    // bool isInAWall = CheckIfWall(characterRect, walls, scene);
-
-    // if (isInAWall == true)
-    // {
-    //   characterRect.X -= movement.X;
-    // }
-
-    characterRect.Y += movement.Y;
-
-    // isInAWall = CheckIfWall(characterRect, walls, scene);
-
-    // if (isInAWall == true)
-    // {
-    //   characterRect.Y -= movement.Y;
-    // }
-
-    if (characterRect.X < 0 || characterRect.X > 800 - 65)
-    {
-      characterRect.X -= movement.X;
-    }
-    if (characterRect.Y < 0 || characterRect.Y > 600 - 52)
-    {
-      characterRect.Y -= movement.Y;
-    }
-
-    // bool isInAWall = CheckIfWall(characterRect, walls, scene);
-    // if (isInAWall)
-    // {
-
-    // }    
-
-    foreach (Rectangle wall in walls)
-    {
-      if (Raylib.CheckCollisionRecs(characterRect, wall))
-      {
-        scene = "start";
-         characterRect.X = 10;
-   characterRect.Y = 430;
-      }
-    }
-
-    if (Raylib.CheckCollisionRecs(characterRect, doorRect))
-    {
-      scene = "start";
-       characterRect.X = 10;
-   characterRect.Y = 430;
-    }
-
-
-
-  }
-
-
-  // --------------------------------------------------------------------------
-  // RENDERING
-  // --------------------------------------------------------------------------
-
-  Raylib.BeginDrawing();
-  if (scene == "start")
-  {
-    Raylib.ClearBackground(Color.SKYBLUE);
-    Raylib.DrawText("Press SPACE to start", 10, 10, 32, Color.BLACK);
-  }
-  else if (scene == "game")
-  {
-    Raylib.ClearBackground(Color.PURPLE);
-
-
-
-
-    Raylib.DrawTexture(characterImage, (int)characterRect.X, (int)characterRect.Y, Color.WHITE);
-
-    Raylib.DrawRectangleRec(doorRect, Color.BROWN);
-
-    Raylib.DrawRectangleRec(walls[0], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[1], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[2], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[3], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[4], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[5], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[6], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[7], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[8], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[9], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[10], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[11], Color.BLACK);
-    Raylib.DrawRectangleRec(walls[12], Color.BLACK);
-
-
-   
-
-  }
-
-  Raylib.EndDrawing();
+    Raylib.EndDrawing();
 }
+
 
 static bool CheckIfWall(Rectangle characterRect, List<Rectangle> walls, string scene)
 {
-  foreach (Rectangle wall in walls)
-  {
-    if (Raylib.CheckCollisionRecs(characterRect, wall))
-{
-    scene = "start";
-    characterRect.X = 10;
-   characterRect.Y = 430;
+    foreach (Rectangle wall in walls)
+    {
+        if (Raylib.CheckCollisionRecs(characterRect, wall))
+        {
+            scene = "win";
+            characterRect.X = 10;
+            characterRect.Y = 430;
 
-      return true;
-   }
+            return true;
+        }
 
-  }
-  return false;
+    }
+    return false;
 }
