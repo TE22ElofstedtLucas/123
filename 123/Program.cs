@@ -1,9 +1,10 @@
 ﻿using Raylib_cs;
 using System.Numerics;
+using System.Reflection.Metadata.Ecma335;
+using System.Timers;
 
 Raylib.InitWindow(800, 600, "Hello");
 Raylib.SetTargetFPS(60);
-
 
 Vector2 movement = new Vector2(0.1f, 0.1f);
 Color hotPink = new Color(255, 105, 180, 255);
@@ -14,8 +15,6 @@ Texture2D characterImage = Raylib.LoadTexture("cube.png");
 Rectangle characterRect = new Rectangle(10, 430, 32, 32);
 characterRect.Width = characterImage.Width;
 characterRect.Height = characterImage.Height;
-
-
 
 List<Rectangle> walls = new();
 walls.Add(new Rectangle(40, 40, 740, 30));
@@ -31,7 +30,6 @@ walls.Add(new Rectangle(440, 40, 30, 420));
 walls.Add(new Rectangle(550, 140, 30, 450));
 walls.Add(new Rectangle(550, 140, 80, 30));
 walls.Add(new Rectangle(630, 140, 30, 450));
-
 
 
 
@@ -56,6 +54,8 @@ while (!Raylib.WindowShouldClose())
     }
     else if (scene == "game")
     {
+        DateTime start = DateTime.Now;
+
         movement = Vector2.Zero;
 
         // kod här: läsa in knapptryck, ändra på movement
@@ -129,12 +129,9 @@ while (!Raylib.WindowShouldClose())
             scene = "win";
             characterRect.X = 10;
             characterRect.Y = 430;
+
         }
-
-
-
     }
-
 
     // --------------------------------------------------------------------------
     // Väggar och scener
@@ -148,6 +145,8 @@ while (!Raylib.WindowShouldClose())
     }
     else if (scene == "game")
     {
+       
+    
         Raylib.ClearBackground(Color.PURPLE);
 
         Raylib.DrawTexture(characterImage, (int)characterRect.X, (int)characterRect.Y, Color.WHITE);
